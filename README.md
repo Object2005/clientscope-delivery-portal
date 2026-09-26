@@ -5,16 +5,15 @@
 [![Express](https://img.shields.io/badge/Express-4.x-black?style=flat-square&logo=express)](https://expressjs.com/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![Architecture](https://img.shields.io/badge/Architecture-Monorepo-orange?style=flat-square)](#architecture)
-[![Evaluation](https://img.shields.io/badge/Assessment-75WAY%20Technologies-emerald?style=flat-square)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Submission for 75WAY Technologies Campus Recruitment Drive 2027**  
-> *Target Position: Software Development Engineer (Level II)*
+> **A modern, full-stack enterprise client project management & milestone delivery tracking platform.**
 
 ---
 
 ## 📌 Executive Summary & Problem Solved
 
-In modern IT service firms and custom software development agencies (such as **75WAY Technologies**), delivering projects to international clients requires transparency, rigorous milestone tracking, and tight budget control. Traditional spreadsheets lead to missed deadlines, milestone scope creep, and unclear billing statuses.
+In modern IT service firms, software consultancies, and digital agencies, delivering projects to international clients requires transparency, rigorous milestone tracking, and tight budget control. Traditional spreadsheets lead to missed deadlines, milestone scope creep, and unclear billing statuses.
 
 **ClientScope** is an end-to-end full-stack portal architected to streamline client engagement, milestone-driven development sprints, and real-time delivery tracking in a single, unified codebase.
 
@@ -22,7 +21,7 @@ In modern IT service firms and custom software development agencies (such as **7
 
 ## 🏗️ System Architecture
 
-The project is structured as a **clean monorepo**, adhering strictly to the recruitment drive requirement that both frontend and backend live within the same repository.
+The project is structured as a **clean monorepo**, organizing both frontend and backend within a single, cohesive codebase for rapid full-stack iteration.
 
 ```
 clientscope-monorepo/
@@ -161,7 +160,7 @@ For rapid evaluation, the application includes a **1-click Role Switcher** in th
 
 ---
 
-## 👨‍💻 Candidate Information
-* **Applicant:** Aashray Narang
-* **Target Role:** Software Development Engineer (Level II)
-* **Drive:** 75WAY Technologies Virtual Campus Recruitment 2027
+## 👨‍💻 Author & Contribution
+* **Author:** Aashray Narang
+* **GitHub:** [@Object2005](https://github.com/Object2005)
+* **License:** [MIT License](https://opensource.org/licenses/MIT)

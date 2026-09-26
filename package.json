@@ -1,7 +1,7 @@
 {
   "name": "clientscope-monorepo",
   "version": "1.0.0",
-  "description": "Enterprise IT Project & Milestone Delivery Portal - Built for 75WAY Technical Assessment",
+  "description": "Enterprise IT Project & Milestone Delivery Portal - Modern Full-Stack Monorepo",
   "private": true,
   "scripts": {
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",

@@ -221,7 +221,7 @@ export function App() {
       {/* Footer */}
       <footer className="border-t border-slate-800/80 py-6 text-center text-xs text-slate-400">
         <p>
-          ClientScope • Enterprise IT Project & Milestone Delivery Portal • Built for 75WAY Campus Placement Drive 2027
+          ClientScope • Enterprise IT Project & Milestone Delivery Portal • Built with React, Node.js & Tailwind CSS
         </p>
       </footer>
     </div>

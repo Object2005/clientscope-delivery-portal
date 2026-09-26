@@ -19,7 +19,7 @@ export const Navbar = ({ onOpenCreateProject, onOpenClientModal }) => {
               <div className="flex items-center space-x-2">
                 <span className="text-xl font-bold tracking-tight text-white">ClientScope</span>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
-                  v1.0 • 75WAY Special
+                  v1.0 • Enterprise Edition
                 </span>
               </div>
               <p className="text-xs text-slate-400 hidden sm:block">IT Project Scope & Milestone Delivery Hub</p>
