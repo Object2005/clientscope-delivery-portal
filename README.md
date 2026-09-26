@@ -4,10 +4,12 @@
 [![React](https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react)](https://react.dev/)
 [![Express](https://img.shields.io/badge/Express-4.x-black?style=flat-square&logo=express)](https://expressjs.com/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-000000?style=flat-square&logo=vercel)](https://clientscope-delivery-portal.vercel.app)
 [![Architecture](https://img.shields.io/badge/Architecture-Monorepo-orange?style=flat-square)](#architecture)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **A modern, full-stack enterprise client project management & milestone delivery tracking platform.**
+> **A modern, full-stack enterprise client project management & milestone delivery tracking platform.**  
+> 🌐 **Live Demo URL:** [https://clientscope-delivery-portal.vercel.app](https://clientscope-delivery-portal.vercel.app)
 
 ---
 
