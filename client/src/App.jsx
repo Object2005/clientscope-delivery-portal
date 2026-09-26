@@ -7,9 +7,11 @@ import { ClientModal } from './components/ClientModal';
 import { InvoiceModal } from './components/InvoiceModal';
 import { ActivityDrawer } from './components/ActivityDrawer';
 import { api } from './utils/api';
+import { useAuth } from './context/AuthContext';
 import { Search, RefreshCw, FolderPlus } from 'lucide-react';
 
 export function App() {
+  const { roleToast } = useAuth();
   const [projects, setProjects] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -273,6 +275,14 @@ export function App() {
         isOpen={isActivityDrawerOpen}
         onClose={() => setIsActivityDrawerOpen(false)}
       />
+
+      {/* Floating Animated Role Switch Toast */}
+      {roleToast && (
+        <div className={`fixed bottom-6 right-6 z-50 p-4 rounded-2xl border shadow-2xl backdrop-blur-md max-w-sm transition-all duration-300 transform translate-y-0 opacity-100 ${roleToast.color}`}>
+          <h5 className="font-bold text-sm tracking-tight">{roleToast.title}</h5>
+          <p className="text-xs text-slate-300 mt-1 leading-relaxed">{roleToast.description}</p>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 py-6 text-center text-xs text-slate-400">

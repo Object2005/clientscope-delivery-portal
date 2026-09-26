@@ -6,45 +6,51 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('clientscope_user');
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('clientscope_token');
-      if (token) {
-        try {
-          const res = await api.get('/auth/me');
-          if (res.success && res.data) {
-            setUser(res.data);
-            localStorage.setItem('clientscope_user', JSON.stringify(res.data));
-          }
-        } catch (err) {
-          console.warn('Session expired or server offline:', err.message);
-          // Keep cached user if offline for evaluation resilience
-        }
-      } else {
-        // Automatically log in as default Admin for seamless evaluation demo!
-        loginAsDemo('admin');
-      }
-      setLoading(false);
+    return saved ? JSON.parse(saved) : {
+      _id: 'usr_1',
+      name: 'Aashray Narang',
+      email: 'admin@75way.com',
+      role: 'admin',
+      token: 'demo_token_admin'
     };
+  });
+  const [loading, setLoading] = useState(false);
+  const [roleToast, setRoleToast] = useState(null);
 
-    checkAuth();
-  }, []);
+  const showToast = (role) => {
+    const toastData = role === 'admin'
+      ? {
+          title: 'Switched to Administrator 🛡️',
+          description: 'Full administrative access activated. You can create, edit, and delete projects.',
+          color: 'border-emerald-500/40 bg-slate-900/95 text-emerald-400'
+        }
+      : {
+          title: 'Switched to Project Manager 👔',
+          description: 'Project delivery view activated. Track sprints and update milestone completions.',
+          color: 'border-sky-500/40 bg-slate-900/95 text-sky-400'
+        };
 
-  const login = async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
-    if (res.success && res.data) {
-      localStorage.setItem('clientscope_token', res.data.token);
-      localStorage.setItem('clientscope_user', JSON.stringify(res.data));
-      setUser(res.data);
-      return res.data;
-    }
+    setRoleToast(toastData);
+    setTimeout(() => {
+      setRoleToast(null);
+    }, 3200);
   };
 
   const loginAsDemo = async (role = 'admin') => {
+    // 1. Instant optimistic state update for silky smooth animation
+    const optimisticUser = {
+      _id: role === 'admin' ? 'usr_1' : 'usr_2',
+      name: role === 'admin' ? 'Aashray Narang' : 'Alex Mercer',
+      email: role === 'admin' ? 'admin@75way.com' : 'pm@75way.com',
+      role: role,
+      token: role === 'admin' ? 'token_admin' : 'token_manager'
+    };
+
+    setUser(optimisticUser);
+    localStorage.setItem('clientscope_user', JSON.stringify(optimisticUser));
+    showToast(role);
+
+    // 2. Perform background sync with backend
     try {
       const email = role === 'admin' ? 'admin@75way.com' : 'pm@75way.com';
       const password = 'admin123';
@@ -55,17 +61,17 @@ export const AuthProvider = ({ children }) => {
         setUser(res.data);
       }
     } catch (e) {
-      // Local fallback mock
-      const fallbackUser = {
-        _id: 'usr_demo',
-        name: role === 'admin' ? 'Aashray Narang (Admin)' : 'Alex Mercer (Manager)',
-        email: role === 'admin' ? 'admin@75way.com' : 'pm@75way.com',
-        role: role,
-        token: 'demo_token_75way'
-      };
-      localStorage.setItem('clientscope_token', fallbackUser.token);
-      localStorage.setItem('clientscope_user', JSON.stringify(fallbackUser));
-      setUser(fallbackUser);
+      // Optimistic user already set, no disruption
+    }
+  };
+
+  const login = async (email, password) => {
+    const res = await api.post('/auth/login', { email, password });
+    if (res.success && res.data) {
+      localStorage.setItem('clientscope_token', res.data.token);
+      localStorage.setItem('clientscope_user', JSON.stringify(res.data));
+      setUser(res.data);
+      return res.data;
     }
   };
 
@@ -80,6 +86,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         loading,
+        roleToast,
         isAuthenticated: !!user,
         login,
         loginAsDemo,
