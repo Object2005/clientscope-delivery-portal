@@ -1,12 +1,15 @@
-// In-memory fallback and seed data store
-// Ensures seamless out-of-the-box execution even if MongoDB is not locally running!
+// Persistent disk-backed store with initial seed data
+// Automatically syncs to server/data/db.json so data persists permanently!
+const fs = require('fs');
+const path = require('path');
 
-let users = [
+const DB_FILE = path.join(__dirname, 'db.json');
+
+const initialUsers = [
   {
     _id: "usr_1",
     name: "Aashray Narang",
     email: "admin@75way.com",
-    // hashed version of 'admin123'
     password: "$2a$10$X87XvL7Uf0d14U/n0aTffOx1Q5015gUfxlVn0F7Yl7i10yLwM8EKe",
     role: "admin",
     createdAt: new Date("2026-01-10")
@@ -21,7 +24,7 @@ let users = [
   }
 ];
 
-let clients = [
+const initialClients = [
   {
     _id: "cl_1",
     name: "David Vance",
@@ -54,7 +57,7 @@ let clients = [
   }
 ];
 
-let projects = [
+const initialProjects = [
   {
     _id: "proj_1",
     title: "AI Mobile Banking Application",
@@ -175,8 +178,75 @@ let projects = [
   }
 ];
 
+const initialActivities = [
+  {
+    id: "act_1",
+    title: "Milestone Delivered",
+    description: "Architecture & Figma UI/UX System marked Completed for Apex Global FinTech",
+    user: "Aashray Narang",
+    timestamp: new Date(Date.now() - 3600000 * 2).toISOString()
+  },
+  {
+    id: "act_2",
+    title: "Project Onboarded",
+    description: "New enterprise contract signed with Nordic Health AI ($24,000)",
+    user: "John Miller",
+    timestamp: new Date(Date.now() - 3600000 * 18).toISOString()
+  }
+];
+
+// Load from disk if exists, otherwise write initial seed
+let users = [...initialUsers];
+let clients = [...initialClients];
+let projects = [...initialProjects];
+let activities = [...initialActivities];
+
+const saveToDisk = () => {
+  try {
+    const data = JSON.stringify({ users, clients, projects, activities }, null, 2);
+    fs.writeFileSync(DB_FILE, data, 'utf-8');
+  } catch (err) {
+    console.error('Error persisting database to disk:', err.message);
+  }
+};
+
+const loadFromDisk = () => {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+      if (data.users) users = data.users;
+      if (data.clients) clients = data.clients;
+      if (data.projects) projects = data.projects;
+      if (data.activities) activities = data.activities;
+      return;
+    }
+  } catch (err) {
+    console.warn('Could not read db.json, using seed defaults:', err.message);
+  }
+  saveToDisk();
+};
+
+loadFromDisk();
+
+const addActivity = (title, description, userName = 'Aashray Narang') => {
+  const act = {
+    id: `act_${Date.now()}`,
+    title,
+    description,
+    user: userName,
+    timestamp: new Date().toISOString()
+  };
+  activities.unshift(act);
+  if (activities.length > 20) activities.pop(); // keep last 20
+  saveToDisk();
+  return act;
+};
+
 module.exports = {
   users,
   clients,
-  projects
+  projects,
+  activities,
+  saveToDisk,
+  addActivity
 };

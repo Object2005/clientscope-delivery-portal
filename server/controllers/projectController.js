@@ -1,5 +1,5 @@
 const Project = require('../models/Project');
-const { projects } = require('../data/mockStore');
+const { projects, activities, saveToDisk, addActivity } = require('../data/mockStore');
 
 // @desc    Get all projects with optional filtering
 // @route   GET /api/projects
@@ -124,6 +124,7 @@ const createProject = async (req, res) => {
         deadline: deadline || '',
         milestones: formattedMilestones
       });
+      addActivity('New Project Contract', `${title} ($${Number(budget).toLocaleString()}) for ${clientName}`, req.user?.name);
       return res.status(201).json({ success: true, data: project });
     } catch (dbErr) {
       // Fallback
@@ -142,6 +143,8 @@ const createProject = async (req, res) => {
         createdAt: new Date()
       };
       projects.unshift(newProj);
+      saveToDisk();
+      addActivity('New Project Contract', `${title} ($${Number(budget).toLocaleString()}) for ${clientName}`, req.user?.name);
       return res.status(201).json({ success: true, data: newProj });
     }
   } catch (error) {
@@ -169,7 +172,6 @@ const toggleMilestone = async (req, res) => {
         if (milestone) {
           milestone.status = newStatus;
           
-          // Auto update overall project status if all milestones are complete
           const allCompleted = project.milestones.every((m) => m.status === 'completed');
           if (allCompleted) {
             project.status = 'delivered';
@@ -178,6 +180,7 @@ const toggleMilestone = async (req, res) => {
           }
 
           await project.save();
+          addActivity('Milestone Status Updated', `"${milestone.title}" set to ${newStatus} in ${project.title}`, req.user?.name);
           return res.json({ success: true, data: project });
         }
       }
@@ -204,6 +207,9 @@ const toggleMilestone = async (req, res) => {
       mockProj.status = 'in-progress';
     }
 
+    saveToDisk();
+    addActivity('Milestone Status Updated', `"${milestone.title}" marked as ${newStatus} in ${mockProj.title}`, req.user?.name);
+
     res.json({ success: true, data: mockProj });
   } catch (error) {
     console.error('Error toggling milestone:', error);
@@ -226,7 +232,9 @@ const deleteProject = async (req, res) => {
 
     const index = projects.findIndex((p) => p._id === id);
     if (index !== -1) {
-      projects.splice(index, 1);
+      const removed = projects.splice(index, 1)[0];
+      saveToDisk();
+      addActivity('Project Archived', `"${removed.title}" removed by Administrator`, req.user?.name);
     }
 
     res.json({ success: true, message: 'Project deleted successfully' });
@@ -236,7 +244,7 @@ const deleteProject = async (req, res) => {
   }
 };
 
-// @desc    Get executive stats summary for dashboard
+// @desc    Get dashboard metrics
 // @route   GET /api/projects/stats/summary
 // @access  Private
 const getDashboardStats = async (req, res) => {
@@ -287,11 +295,27 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+// @desc    Get system audit activity logs
+// @route   GET /api/projects/audit/activities
+// @access  Private
+const getActivities = async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      count: activities.length,
+      data: activities
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to retrieve activity trail' });
+  }
+};
+
 module.exports = {
   getProjects,
   getProjectById,
   createProject,
   toggleMilestone,
   deleteProject,
-  getDashboardStats
+  getDashboardStats,
+  getActivities
 };

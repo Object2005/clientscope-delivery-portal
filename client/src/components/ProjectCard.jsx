@@ -9,11 +9,12 @@ import {
   Clock,
   AlertCircle,
   Trash2,
-  Check
+  Check,
+  FileText
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-export const ProjectCard = ({ project, onToggleMilestone, onDeleteProject }) => {
+export const ProjectCard = ({ project, onToggleMilestone, onDeleteProject, onOpenInvoice }) => {
   const { user } = useAuth();
   const [expanded, setExpanded] = useState(true);
 
@@ -61,15 +62,25 @@ export const ProjectCard = ({ project, onToggleMilestone, onDeleteProject }) => 
             </span>
           </div>
 
-          {user?.role === 'admin' && (
+          <div className="flex items-center space-x-1">
             <button
-              onClick={() => onDeleteProject(project._id)}
-              className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
-              title="Delete Project (Admin only)"
+              onClick={() => onOpenInvoice(project)}
+              className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors"
+              title="Generate Official Client Invoice"
             >
-              <Trash2 className="w-4 h-4" />
+              <FileText className="w-4 h-4" />
             </button>
-          )}
+
+            {user?.role === 'admin' && (
+              <button
+                onClick={() => onDeleteProject(project._id)}
+                className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                title="Delete Project (Admin only)"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

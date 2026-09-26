@@ -6,13 +6,15 @@ const {
   createProject,
   toggleMilestone,
   deleteProject,
-  getDashboardStats
+  getDashboardStats,
+  getActivities
 } = require('../controllers/projectController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.use(protect);
 
 router.get('/stats/summary', getDashboardStats);
+router.get('/audit/activities', getActivities);
 
 router.route('/')
   .get(getProjects)

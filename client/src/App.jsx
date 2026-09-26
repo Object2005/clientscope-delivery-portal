@@ -4,8 +4,10 @@ import { StatsOverview } from './components/StatsOverview';
 import { ProjectCard } from './components/ProjectCard';
 import { CreateProjectModal } from './components/CreateProjectModal';
 import { ClientModal } from './components/ClientModal';
+import { InvoiceModal } from './components/InvoiceModal';
+import { ActivityDrawer } from './components/ActivityDrawer';
 import { api } from './utils/api';
-import { Search, Filter, RefreshCw, FolderPlus } from 'lucide-react';
+import { Search, RefreshCw, FolderPlus } from 'lucide-react';
 
 export function App() {
   const [projects, setProjects] = useState([]);
@@ -14,9 +16,12 @@ export function App() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Modals
+  // Modals & Drawers
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
+  const [isActivityDrawerOpen, setIsActivityDrawerOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+  const [selectedProjectForInvoice, setSelectedProjectForInvoice] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -64,7 +69,6 @@ export function App() {
       });
 
       if (res.success && res.data) {
-        // Refresh project and stats
         const updatedStats = await api.get('/projects/stats/summary');
         if (updatedStats.success) setStats(updatedStats.data);
       }
@@ -99,12 +103,52 @@ export function App() {
     }
   };
 
+  const handleOpenInvoice = (project) => {
+    setSelectedProjectForInvoice(project);
+    setIsInvoiceModalOpen(true);
+  };
+
+  const handleExportCSV = () => {
+    if (!projects || projects.length === 0) {
+      alert('No projects to export');
+      return;
+    }
+
+    const headers = ['Project Title', 'Client Name', 'Country', 'Budget (USD)', 'Status', 'Deadline', 'Milestones Count', 'Completed Count'];
+    const rows = projects.map((p) => {
+      const ms = p.milestones || [];
+      const completed = ms.filter((m) => m.status === 'completed').length;
+      return [
+        `"${p.title.replace(/"/g, '""')}"`,
+        `"${p.clientName.replace(/"/g, '""')}"`,
+        `"${p.clientCountry || 'Global'}"`,
+        p.budget || 0,
+        p.status,
+        p.deadline || '',
+        ms.length,
+        completed
+      ];
+    });
+
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `ClientScope_Projects_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
       {/* Top Navigation */}
       <Navbar
         onOpenCreateProject={() => setIsCreateModalOpen(true)}
         onOpenClientModal={() => setIsClientModalOpen(true)}
+        onOpenActivities={() => setIsActivityDrawerOpen(true)}
+        onExportCSV={handleExportCSV}
       />
 
       {/* Main Content Area */}
@@ -199,6 +243,7 @@ export function App() {
                 project={project}
                 onToggleMilestone={handleToggleMilestone}
                 onDeleteProject={handleDeleteProject}
+                onOpenInvoice={handleOpenInvoice}
               />
             ))}
           </div>
@@ -206,7 +251,7 @@ export function App() {
 
       </main>
 
-      {/* Modals */}
+      {/* Modals & Drawers */}
       <CreateProjectModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
@@ -216,6 +261,17 @@ export function App() {
       <ClientModal
         isOpen={isClientModalOpen}
         onClose={() => setIsClientModalOpen(false)}
+      />
+
+      <InvoiceModal
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setIsInvoiceModalOpen(false)}
+        project={selectedProjectForInvoice}
+      />
+
+      <ActivityDrawer
+        isOpen={isActivityDrawerOpen}
+        onClose={() => setIsActivityDrawerOpen(false)}
       />
 
       {/* Footer */}

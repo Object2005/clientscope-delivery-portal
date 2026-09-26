@@ -77,10 +77,14 @@ graph TD
 2. **Interactive Milestone Progression:**
    * Dynamic calculation of project completion percentage `(Completed Milestones / Total Milestones * 100)`.
    * Real-time milestone status toggle (`pending` ➔ `in-progress` ➔ `completed`).
-3. **Executive KPI Dashboard:**
-   * Total Active Projects, Live Pipeline Contract Value ($), Milestone Completion Rate (%).
-4. **Resilient Out-Of-The-Box Evaluation:**
-   * Built with a dual data layer (MongoDB Mongoose schemas + in-memory resilient fallback store). The evaluator can clone and run the application **immediately without needing a local MongoDB daemon running**!
+3. **Official Client Invoicing Engine (Print to PDF):**
+   * Generates formal corporate tax invoices with invoice numbers, milestone items, and automatic 10% international tax calculation with 1-click **Save as PDF / Print**.
+4. **Live System Audit Trail & Change Logs:**
+   * Real-time historical tracking of every team action (project created, milestone marked completed, client onboarded) with user attribution and timestamps.
+5. **Persistent Disk Storage:**
+   * Data automatically syncs and persists across server restarts with dual-layer fallback (MongoDB Atlas / local disk storage).
+6. **Financial Data Export (CSV / Excel):**
+   * 1-Click export of all project contracts, client directories, budgets, and milestone completion counts to CSV for executive reporting.
 
 ---
 
@@ -109,6 +113,7 @@ graph TD
 | `PATCH`| `/api/projects/:id/milestones/:mId` | Private | Toggle milestone status (`pending`/`completed`) |
 | `DELETE`| `/api/projects/:id`| Admin | Delete project from repository |
 | `GET` | `/api/projects/stats/summary` | Private | Executive stats summary for dashboard |
+| `GET` | `/api/projects/audit/activities` | Private | Real-time system audit logs & change trail |
 
 ---
 

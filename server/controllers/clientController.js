@@ -1,5 +1,5 @@
 const Client = require('../models/Client');
-const { clients } = require('../data/mockStore');
+const { clients, saveToDisk, addActivity } = require('../data/mockStore');
 
 // @desc    Get all enterprise clients
 // @route   GET /api/clients
@@ -45,6 +45,7 @@ const createClient = async (req, res) => {
         phone: phone || '',
         status: status || 'active'
       });
+      addActivity('New Client Onboarded', `${company} (${country || 'Global'}) registered by ${req.user?.name || 'Manager'}`);
       return res.status(201).json({ success: true, data: client });
     } catch (dbErr) {
       // Fallback in-memory
@@ -59,6 +60,8 @@ const createClient = async (req, res) => {
         createdAt: new Date()
       };
       clients.unshift(newClient);
+      saveToDisk();
+      addActivity('New Client Onboarded', `${company} (${country || 'Global'}) registered by ${req.user?.name || 'Manager'}`);
       return res.status(201).json({ success: true, data: newClient });
     }
   } catch (error) {
@@ -82,7 +85,9 @@ const deleteClient = async (req, res) => {
 
     const index = clients.findIndex((c) => c._id === id);
     if (index !== -1) {
-      clients.splice(index, 1);
+      const removed = clients.splice(index, 1)[0];
+      saveToDisk();
+      addActivity('Client Account Removed', `${removed.company} was deleted from database`);
     }
 
     res.json({ success: true, message: 'Client removed successfully' });

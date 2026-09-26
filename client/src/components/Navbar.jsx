@@ -1,9 +1,9 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Layers, Plus, UserCheck, Shield, Users, LogOut } from 'lucide-react';
+import { Layers, Plus, Users, History, Download } from 'lucide-react';
 
-export const Navbar = ({ onOpenCreateProject, onOpenClientModal }) => {
-  const { user, loginAsDemo, logout } = useAuth();
+export const Navbar = ({ onOpenCreateProject, onOpenClientModal, onOpenActivities, onExportCSV }) => {
+  const { user, loginAsDemo } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
@@ -27,14 +27,34 @@ export const Navbar = ({ onOpenCreateProject, onOpenClientModal }) => {
           </div>
 
           {/* Quick Actions & Role Controls */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2.5">
+            {/* Export CSV */}
+            <button
+              onClick={onExportCSV}
+              title="Export all projects and budget data to CSV"
+              className="inline-flex items-center px-2.5 py-2 text-xs font-medium rounded-lg text-slate-300 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 transition-all hover:text-white"
+            >
+              <Download className="w-3.5 h-3.5 sm:mr-1.5 text-slate-400" />
+              <span className="hidden sm:inline">Export CSV</span>
+            </button>
+
+            {/* Audit Activities */}
+            <button
+              onClick={onOpenActivities}
+              title="View live system audit trail & change logs"
+              className="inline-flex items-center px-2.5 py-2 text-xs font-medium rounded-lg text-slate-300 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 transition-all hover:text-white"
+            >
+              <History className="w-3.5 h-3.5 sm:mr-1.5 text-emerald-400" />
+              <span className="hidden sm:inline">Audit Trail</span>
+            </button>
+
             {/* Quick Add Client */}
             <button
               onClick={onOpenClientModal}
-              className="inline-flex items-center px-3 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all hover:text-white"
+              className="inline-flex items-center px-2.5 py-2 text-xs font-medium rounded-lg text-slate-300 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 transition-all hover:text-white"
             >
-              <Users className="w-4 h-4 mr-1.5 text-slate-400" />
-              Clients
+              <Users className="w-3.5 h-3.5 sm:mr-1.5 text-slate-400" />
+              <span className="hidden sm:inline">Clients</span>
             </button>
 
             {/* Quick Add Project */}
@@ -47,7 +67,7 @@ export const Navbar = ({ onOpenCreateProject, onOpenClientModal }) => {
             </button>
 
             {/* Current User Badge & Role Switcher */}
-            <div className="hidden md:flex items-center pl-3 border-l border-slate-800 space-x-2">
+            <div className="hidden lg:flex items-center pl-3 border-l border-slate-800 space-x-2">
               <div className="flex flex-col text-right">
                 <span className="text-xs font-semibold text-slate-200">{user?.name || 'Aashray Narang'}</span>
                 <span className="text-[10px] text-emerald-400 uppercase tracking-wider font-bold">
