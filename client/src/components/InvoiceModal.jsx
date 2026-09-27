@@ -62,8 +62,8 @@ export const InvoiceModal = ({ isOpen, onClose, project }) => {
               </div>
               <p className="text-xs text-slate-400 print:text-gray-600 mt-1.5 leading-relaxed">
                 Enterprise Custom Software & Cloud Engineering<br />
-                Phase 8B, Industrial Area, Sector 74, Mohali, Punjab<br />
-                support@clientscope.io • GSTIN: 03AABCU9603R1ZM
+                Suite 450, 100 Innovation Boulevard, Tech District, Austin, TX 78701<br />
+                support@clientscope.io • Tax ID: US-EIN-94-3829104
               </p>
             </div>
 
@@ -154,8 +154,8 @@ export const InvoiceModal = ({ isOpen, onClose, project }) => {
                 <span>Wire Transfer / Payment Instructions</span>
               </div>
               <p className="font-mono text-[11px] leading-relaxed">
-                Beneficiary: ClientScope Global Tech Pvt Ltd<br />
-                Routing/Swift: HDFC0000287 / CHASEUS33<br />
+                Beneficiary: ClientScope Global Solutions LLC<br />
+                Routing/Swift: CHASEUS33 / BOFAUS3N<br />
                 Terms: Net 15 days upon milestone verification.
               </p>
             </div>
